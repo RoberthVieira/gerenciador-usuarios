@@ -1,6 +1,11 @@
-import type{ UserTypes } from "../types/types";
+interface UserCardProps {
+  id: number;
+  name: string;
+  email: string;
+  onDelete: () => void;
+}
 
-export default function UserCard({id,  name, email}: UserTypes){
+export default function UserCard({id,  name, email, onDelete}: UserCardProps){
     return(
         <div key={id}>
             <h2>
@@ -9,7 +14,7 @@ export default function UserCard({id,  name, email}: UserTypes){
             <p>
                 {email}
             </p>
-            <button>Excluir Usuário</button>
+            <button onClick={onDelete}>Excluir Usuário</button>
         </div>
     )
 }
