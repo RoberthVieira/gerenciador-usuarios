@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 
 export interface User{
@@ -14,29 +15,33 @@ export default function Home(){
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        async function buscarUser() {
-            try{
-                const resposta = await api.get("/users");
-                setUsers(resposta.data)
-            } catch(error) {
-                setError("Erro ao buscar Usuário")
-            } finally {
-                setLoading(false)
-            }
-        }
+    const navigate = useNavigate();
 
-        buscarUser();
-    },[]);
+    async function buscarUser() {
+        try{
+            const resposta = await api.get("/users");
+            setUsers(resposta.data)
+        } catch(error) {
+            setError("Erro ao buscar Usuário")
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        buscarUser()
+    },[])
+
+    console.log(users)
 
     async function deleteUsers(id :number) {
         try{
             await api.delete(`/users/${id}`)
 
             setUsers((prev) => prev.filter((usuario) => usuario.id !==  id))
-            } catch (error) {
-                console.error("Erro ao excluir:", error);
-            }
+        } catch (error) {
+            console.error("Erro ao excluir:", error);
+        }
     }
 
     if(loading) return <p>Carregando...</p>;
@@ -62,7 +67,11 @@ export default function Home(){
             </ul>
 
             <div>
-                <button>Criar Novo Usuário</button>
+                <button 
+                    onClick={() => navigate("/createuser")}
+                >
+                    Criar Novo Usuário
+                </button>
             </div>
         </div>
     )
